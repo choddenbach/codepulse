@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="CodePulse scans your codebase for complexity, dependency health, test coverage, documentation quality, and security signals in one fast CLI run."
+    />
+    <title>CodePulse — Instant Codebase Health Scores</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="#top" aria-label="CodePulse home">
+          <span class="brand-mark">CP</span>
+          <span class="brand-text">CodePulse</span>
+        </a>
+        <nav class="site-nav" aria-label="Primary">
+          <a href="#features">Features</a>
+          <a href="#demo">Demo</a>
+          <a href="#pricing">Pricing</a>
+          <a class="nav-link-cta" href="https://github.com/choddenbach/codepulse">GitHub</a>
+        </nav>
+      </header>
+
+      <main id="top">
+        <section class="hero section-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Codebase health, in one command</p>
+            <h1>Catch complexity, risk, and coverage gaps before they slow the team down.</h1>
+            <p class="hero-text">
+              CodePulse gives engineers an instant health score across the five signals that matter most:
+              complexity, dependencies, tests, documentation, and security.
+            </p>
+
+            <div class="command-card" aria-label="Install command">
+              <span class="command-prompt">$</span>
+              <code id="install-command">npx codepulse scan</code>
+              <button id="copy-command" type="button">Copy</button>
+            </div>
+
+            <div class="hero-actions">
+              <a class="button button-primary" href="https://www.npmjs.com/package/codepulse">Try on npm</a>
+              <a class="button button-secondary" href="https://github.com/choddenbach/codepulse">View source</a>
+            </div>
+
+            <ul class="hero-metrics" aria-label="Highlights">
+              <li><strong>5</strong><span>analysis modules</span></li>
+              <li><strong>&lt;1s</strong><span>landing page load target</span></li>
+              <li><strong>0</strong><span>cloud accounts required</span></li>
+            </ul>
+          </div>
+
+          <div class="hero-panel surface-panel">
+            <div class="score-card">
+              <p class="eyebrow">What teams see</p>
+              <div class="score-row">
+                <div>
+                  <p class="score-label">Overall health</p>
+                  <p class="score-value">83<span>/100</span></p>
+                </div>
+                <div class="grade-pill">Good</div>
+              </div>
+              <p class="muted-text">Actionable output for engineers, tech leads, and CI pipelines.</p>
+            </div>
+
+            <div class="mini-grid">
+              <article class="mini-card">
+                <span class="mini-label">Fast signal</span>
+                <strong>CLI-first</strong>
+                <p>Run locally without sending code to a hosted service.</p>
+              </article>
+              <article class="mini-card">
+                <span class="mini-label">Built for shipping</span>
+                <strong>HTML reports</strong>
+                <p>Share a polished snapshot with teammates in seconds.</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section id="features" class="section-block">
+          <div class="section-heading">
+            <p class="eyebrow">Feature modules</p>
+            <h2>Five scanners. One clear health score.</h2>
+            <p>
+              Each module focuses on a real maintenance risk, then rolls up into a fast health report that is easy
+              to act on.
+            </p>
+          </div>
+
+          <div class="feature-grid">
+            <article class="feature-card surface-panel">
+              <div class="feature-icon">λ</div>
+              <h3>Complexity Analysis</h3>
+              <p>Flags deeply nested logic and high cyclomatic complexity before it turns into fragile code.</p>
+            </article>
+            <article class="feature-card surface-panel">
+              <div class="feature-icon">pkg</div>
+              <h3>Dependency Health</h3>
+              <p>Highlights aging packages, suspicious lockfile patterns, and dependency sprawl.</p>
+            </article>
+            <article class="feature-card surface-panel">
+              <div class="feature-icon">✓</div>
+              <h3>Test Coverage</h3>
+              <p>Shows where source files are missing test companions so teams can close risk gaps quickly.</p>
+            </article>
+            <article class="feature-card surface-panel">
+              <div class="feature-icon">///</div>
+              <h3>Documentation Quality</h3>
+              <p>Checks exported code for missing JSDoc and other signs your APIs are getting harder to use.</p>
+            </article>
+            <article class="feature-card surface-panel">
+              <div class="feature-icon">!</div>
+              <h3>Security Signals</h3>
+              <p>Detects obvious foot-guns like hard-coded secrets, unsafe eval usage, and plain HTTP endpoints.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="demo" class="section-block demo-layout">
+          <div class="section-heading">
+            <p class="eyebrow">Product demo</p>
+            <h2>See the scan in motion.</h2>
+            <p>
+              The terminal view mirrors the product experience: a quick scan, clear module scores, and prioritized
+              findings you can work through immediately.
+            </p>
+          </div>
+
+          <div class="terminal surface-panel" aria-live="polite">
+            <div class="terminal-header">
+              <div class="terminal-dots" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+              <p>codepulse-demo</p>
+            </div>
+            <div id="terminal-output" class="terminal-output"></div>
+          </div>
+        </section>
+
+        <section id="pricing" class="section-block">
+          <div class="section-heading">
+            <p class="eyebrow">Pricing</p>
+            <h2>Start free, upgrade when your team needs more visibility.</h2>
+            <p>Simple pricing that matches how engineering teams adopt developer tooling.</p>
+          </div>
+
+          <div class="pricing-grid">
+            <article class="pricing-card surface-panel">
+              <span class="pricing-tier">Free</span>
+              <h3>$0</h3>
+              <p class="pricing-summary">For solo developers and quick local scans.</p>
+              <ul>
+                <li>All 5 analysis modules</li>
+                <li>CLI scan on local projects</li>
+                <li>Terminal output and HTML reports</li>
+              </ul>
+            </article>
+            <article class="pricing-card pricing-card-featured surface-panel">
+              <span class="pricing-tier">Pro</span>
+              <h3>$19<span>/mo</span></h3>
+              <p class="pricing-summary">For engineers who want history, automation, and richer exports.</p>
+              <ul>
+                <li>Everything in Free</li>
+                <li>Saved project baselines</li>
+                <li>CI integrations and trend tracking</li>
+              </ul>
+            </article>
+            <article class="pricing-card surface-panel">
+              <span class="pricing-tier">Team</span>
+              <h3>$99<span>/mo</span></h3>
+              <p class="pricing-summary">For teams standardizing health checks across repositories.</p>
+              <ul>
+                <li>Everything in Pro</li>
+                <li>Shared dashboards and team policies</li>
+                <li>Priority onboarding and support</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <p>Built for fast code reviews, cleaner releases, and healthier repositories.</p>
+        <div class="footer-links">
+          <a href="https://github.com/choddenbach/codepulse">GitHub</a>
+          <a href="https://www.npmjs.com/package/codepulse">npm</a>
+        </div>
+      </footer>
+    </div>
+
+    <script src="./script.js" type="module"></script>
+  </body>
+</html>

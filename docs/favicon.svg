@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title>CodePulse</title>
+  <defs>
+    <linearGradient id="g" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#61c1ff" />
+      <stop offset="100%" stop-color="#4ef0c1" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="18" fill="#091424" />
+  <path d="M21 18h10c9.5 0 16 5.7 16 14s-6.5 14-16 14h-4v10h-6V18Zm6 22h4c6 0 10-2.9 10-8s-4-8-10-8h-4v16Z" fill="url(#g)" />
+</svg>
