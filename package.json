@@ -1,17 +1,44 @@
 {
   "name": "codepulse",
   "version": "0.1.0",
+  "description": "Instant codebase health scores — complexity, dependencies, test coverage, documentation, and security in one scan.",
   "bin": {
     "codepulse": "./bin/codepulse"
   },
   "module": "src/index.ts",
   "main": "./index.ts",
   "type": "module",
-  "private": true,
+  "files": [
+    "src",
+    "bin",
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "bun build ./bin/codepulse --outdir dist --target bun",
     "scan": "bun ./bin/codepulse scan",
     "test": "bun test"
+  },
+  "keywords": [
+    "code-quality",
+    "codebase-health",
+    "static-analysis",
+    "complexity",
+    "security",
+    "cli",
+    "developer-tools",
+    "metrics"
+  ],
+  "author": "CodePulse Authors",
+  "license": "MIT",
+  "homepage": "https://github.com/choddenbach/codepulse",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/choddenbach/codepulse.git"
+  },
+  "bugs": {
+    "url": "https://github.com/choddenbach/codepulse/issues"
   },
   "dependencies": {
     "@babel/parser": "^7.27.0",

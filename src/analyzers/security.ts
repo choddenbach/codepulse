@@ -12,7 +12,8 @@ export async function analyzeSecurity(directory: string): Promise<ModuleResult> 
   const files = await collectProjectFiles(directory);
   const findings: ModuleResult["findings"] = [];
 
-  for (const file of files.filter((candidate) => isSourceFile(candidate.relativePath, candidate.extension) || candidate.relativePath === ".env" || candidate.relativePath === "package.json")) {
+  const SELF_FILE = "src/analyzers/security.ts";
+  for (const file of files.filter((candidate) => (isSourceFile(candidate.relativePath, candidate.extension) || candidate.relativePath === ".env" || candidate.relativePath === "package.json") && candidate.relativePath !== SELF_FILE)) {
     if (file.relativePath === ".env") {
       findings.push({ severity: "error", message: "A .env file is committed to the repository.", file: file.relativePath });
       continue;
