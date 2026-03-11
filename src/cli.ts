@@ -1,6 +1,5 @@
-#!/usr/bin/env bun
-
 import path from "node:path";
+import { writeFileSync } from "node:fs";
 
 import { analyzeProject } from "./analysis/project.ts";
 import { createProgram } from "./cli/options.ts";
@@ -27,7 +26,7 @@ export async function executeScan(options: ScanOptions): Promise<number> {
   }
 
   if (options.format === "html") {
-    await Bun.write(htmlPath, renderHtmlReport(report));
+    writeFileSync(htmlPath, renderHtmlReport(report));
     process.stdout.write(renderTerminalReport(report));
     process.stdout.write(`\nFull report: ${htmlPath}\n`);
     return determineExitCode(report);

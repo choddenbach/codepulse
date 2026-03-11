@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Instant codebase health scores — complexity, dependencies, test coverage, documentation, and security in one scan.",
   "bin": {
-    "codepulse": "./bin/codepulse"
+    "codepulse": "./dist/codepulse.js"
   },
   "module": "src/index.ts",
   "main": "./index.ts",
@@ -16,7 +16,8 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "bun build ./bin/codepulse --outdir dist --target bun",
+    "build": "bun build ./src/cli.ts --outdir dist --target node --entry-naming codepulse.js && printf '#!/usr/bin/env node\n' | cat - dist/codepulse.js > dist/tmp && mv dist/tmp dist/codepulse.js && chmod +x dist/codepulse.js",
+    "prepublishOnly": "bun run build",
     "scan": "bun ./bin/codepulse scan",
     "test": "bun test"
   },

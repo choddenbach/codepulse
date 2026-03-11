@@ -1,4 +1,4 @@
-import { readdir } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 
 const DEFAULT_EXTENSIONS = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".mts", ".cts"]);
@@ -39,7 +39,7 @@ export async function collectProjectFiles(rootPath: string, allowedExtensions = 
         absolutePath,
         relativePath,
         extension,
-        content: await Bun.file(absolutePath).text(),
+        content: await readFile(absolutePath, "utf-8"),
       });
     }
   }

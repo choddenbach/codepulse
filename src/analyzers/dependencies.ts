@@ -1,3 +1,4 @@
+import { readFile, access } from "node:fs/promises";
 import path from "node:path";
 
 import type { ModuleResult } from "../types.ts";
@@ -8,11 +9,20 @@ interface PackageJsonShape {
   peerDependencies?: Record<string, string>;
 }
 
+async function fileExists(filePath: string): Promise<boolean> {
+  try {
+    await access(filePath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export async function analyzeDependencies(directory: string): Promise<ModuleResult> {
   const findings: ModuleResult["findings"] = [];
-  const packageFile = Bun.file(path.join(directory, "package.json"));
+  const packagePath = path.join(directory, "package.json");
 
-  if (!(await packageFile.exists())) {
+  if (!(await fileExists(packagePath))) {
     return {
       score: 0,
       summary: "No package.json found in directory.",
@@ -22,7 +32,7 @@ export async function analyzeDependencies(directory: string): Promise<ModuleResu
 
   let packageJson: PackageJsonShape;
   try {
-    packageJson = (await packageFile.json()) as PackageJsonShape;
+    packageJson = JSON.parse(await readFile(packagePath, "utf-8")) as PackageJsonShape;
   } catch {
     return {
       score: 0,
@@ -65,7 +75,7 @@ export async function analyzeDependencies(directory: string): Promise<ModuleResu
 async function hasAnyLockfile(directory: string): Promise<boolean> {
   const names = ["bun.lock", "bun.lockb", "package-lock.json", "pnpm-lock.yaml", "yarn.lock"];
   for (const name of names) {
-    if (await Bun.file(path.join(directory, name)).exists()) {
+    if (await fileExists(path.join(directory, name))) {
       return true;
     }
   }
