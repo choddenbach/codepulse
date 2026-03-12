@@ -112,28 +112,57 @@ Common use cases:
 
 ## CI Integration
 
-Add CodePulse to your GitHub Actions workflow to track health over time:
+CodePulse now ships with a ready-to-use GitHub Actions workflow at `.github/workflows/ci.yml`.
+
+It does four things on every push and pull request:
+
+- Installs dependencies with Bun
+- Runs the full test suite
+- Builds the CLI bundle
+- Generates JSON and HTML reports, then uploads them as workflow artifacts
+
+The bundled workflow uses `--min-score 65 --fail-on none` so the current repository stays green while still producing reports on every run. Teams can ratchet that threshold upward over time as code health improves.
+
+If you want to copy the setup into another repository, start from this workflow:
 
 ```yaml
-# .github/workflows/codepulse.yml
-name: CodePulse Health Check
+# .github/workflows/ci.yml
+name: CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
-  health:
+  test-build-scan:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: 20
-      - run: npx codepulse scan --format json --min-score 85 > codepulse-report.json
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - run: bun test
+      - run: bun run build
+      - run: |
+          mkdir -p reports
+          bun ./bin/codepulse scan --format json --output reports/codepulse-report.json --min-score 65 --fail-on none .
+          bun ./bin/codepulse scan --format html --output reports/codepulse-report.html --min-score 65 --fail-on none .
       - uses: actions/upload-artifact@v4
         with:
-          name: codepulse-report
-          path: codepulse-report.json
+          name: codepulse-reports
+          path: reports/
 ```
+
+Recommended rollout path:
+
+1. Start with report-only automation using `--fail-on none`
+2. Add a repo-level `codepulse.config.json` with your default `exclude` paths and `outputPath`
+3. Raise `minScore` gradually as the codebase improves
+4. Switch to `--fail-on warning` or `--fail-on error` when you want policy enforcement
 
 ## Pricing
 
