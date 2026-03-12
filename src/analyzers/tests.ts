@@ -1,8 +1,8 @@
 import type { ModuleResult } from "../types.ts";
 import { collectProjectFiles, isSourceFile, isTestFile } from "./shared.ts";
 
-export async function analyzeTests(directory: string): Promise<ModuleResult> {
-  const files = await collectProjectFiles(directory);
+export async function analyzeTests(directory: string, excludePaths: string[] = []): Promise<ModuleResult> {
+  const files = await collectProjectFiles(directory, { excludePaths });
   const sourceFiles = files.filter((file) => isSourceFile(file.relativePath, file.extension));
   const testFiles = files.filter((file) => isTestFile(file.relativePath));
   const findings: ModuleResult["findings"] = [];

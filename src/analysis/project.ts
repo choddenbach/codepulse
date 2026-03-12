@@ -28,11 +28,12 @@ const MODULE_LABELS: Record<ModuleName, string> = {
 export async function analyzeProject(
   targetPath: string,
   requestedModules: ModuleName[] = [...ALL_MODULES],
+  options: { excludePaths?: string[] } = {},
 ): Promise<AnalysisReport> {
   const rootPath = path.resolve(targetPath);
   const moduleResults = await Promise.all(
     requestedModules.map(async (moduleName) => {
-      const result = await runAnalyzer(moduleName, rootPath);
+      const result = await runAnalyzer(moduleName, rootPath, options.excludePaths ?? []);
       switch (moduleName) {
         case "complexity":
         case "deps":
@@ -89,17 +90,17 @@ export async function analyze(targetPath: string): Promise<LegacyAnalysisReport>
   };
 }
 
-async function runAnalyzer(moduleName: ModuleName, rootPath: string): Promise<ModuleResult> {
+async function runAnalyzer(moduleName: ModuleName, rootPath: string, excludePaths: string[]): Promise<ModuleResult> {
   switch (moduleName) {
     case "complexity":
-      return analyzeComplexity(rootPath);
+      return analyzeComplexity(rootPath, excludePaths);
     case "deps":
       return analyzeDependencies(rootPath);
     case "documentation":
-      return analyzeDocumentation(rootPath);
+      return analyzeDocumentation(rootPath, excludePaths);
     case "tests":
-      return analyzeTests(rootPath);
+      return analyzeTests(rootPath, excludePaths);
     case "security":
-      return analyzeSecurity(rootPath);
+      return analyzeSecurity(rootPath, excludePaths);
   }
 }

@@ -7,8 +7,8 @@ interface FunctionMetric {
   complexity: number;
 }
 
-export async function analyzeComplexity(directory: string): Promise<ModuleResult> {
-  const files = (await collectProjectFiles(directory)).filter((file) => isSourceFile(file.relativePath, file.extension));
+export async function analyzeComplexity(directory: string, excludePaths: string[] = []): Promise<ModuleResult> {
+  const files = (await collectProjectFiles(directory, { excludePaths })).filter((file) => isSourceFile(file.relativePath, file.extension));
   const findings: ModuleResult["findings"] = [];
   const metrics: Array<FunctionMetric & { filePath: string }> = [];
 

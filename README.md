@@ -68,12 +68,47 @@ codepulse scan ./src
 # Run specific modules only
 codepulse scan --module complexity,security
 
+# Ignore generated or fixture paths
+codepulse scan --exclude fixtures,src/generated
+
 # Export an HTML report
 codepulse scan --format html
 
+# Write a JSON report directly to disk
+codepulse scan --format json --output reports/codepulse.json
+
 # Output raw JSON
 codepulse scan --format json
+
+# Enforce a CI score threshold
+codepulse scan --min-score 85
+
+# Fail on warning-or-higher findings
+codepulse scan --fail-on warning
 ```
+
+## Configuration
+
+CodePulse auto-discovers `codepulse.config.json` starting from the scan target and walking up to the filesystem root. CLI flags always win over config values.
+
+```json
+{
+  "format": "json",
+  "modules": ["complexity", "security", "tests"],
+  "exclude": ["fixtures", "src/generated"],
+  "outputPath": "reports/codepulse.json",
+  "minScore": 85,
+  "failOnSeverity": "warning"
+}
+```
+
+Common use cases:
+
+- Set a team-wide `minScore` for CI gating
+- Save a default module subset for faster scans
+- Ignore generated code, fixtures, or vendored directories
+- Make machine-readable JSON the default in automation
+- Escalate failures for warning/error findings without changing local habits
 
 ## CI Integration
 
@@ -93,7 +128,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npx codepulse scan --format json > codepulse-report.json
+      - run: npx codepulse scan --format json --min-score 85 > codepulse-report.json
       - uses: actions/upload-artifact@v4
         with:
           name: codepulse-report

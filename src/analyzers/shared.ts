@@ -11,8 +11,13 @@ export interface ProjectFile {
   content: string;
 }
 
-export async function collectProjectFiles(rootPath: string, allowedExtensions = DEFAULT_EXTENSIONS): Promise<ProjectFile[]> {
+export async function collectProjectFiles(
+  rootPath: string,
+  options: { allowedExtensions?: Set<string>; excludePaths?: string[] } = {},
+): Promise<ProjectFile[]> {
   const files: ProjectFile[] = [];
+  const allowedExtensions = options.allowedExtensions ?? DEFAULT_EXTENSIONS;
+  const excludePaths = options.excludePaths?.map(normalizePathForMatching).filter(Boolean) ?? [];
 
   async function walk(currentPath: string): Promise<void> {
     const entries = await readdir(currentPath, { withFileTypes: true });
@@ -23,7 +28,11 @@ export async function collectProjectFiles(rootPath: string, allowedExtensions = 
       }
 
       const absolutePath = path.join(currentPath, entry.name);
-      const relativePath = path.relative(rootPath, absolutePath);
+      const relativePath = normalizePathForMatching(path.relative(rootPath, absolutePath));
+
+      if (shouldExcludePath(relativePath, excludePaths)) {
+        continue;
+      }
 
       if (entry.isDirectory()) {
         await walk(absolutePath);
@@ -62,4 +71,12 @@ export function isTestFile(relativePath: string): boolean {
 
 export function lineNumberFromIndex(content: string, index: number): number {
   return content.slice(0, index).split(/\r?\n/).length;
+}
+
+function shouldExcludePath(relativePath: string, excludePaths: string[]): boolean {
+  return excludePaths.some((excludePath) => relativePath === excludePath || relativePath.startsWith(`${excludePath}/`));
+}
+
+function normalizePathForMatching(value: string): string {
+  return value.replace(/\\/g, "/").replace(/^\.\//, "").replace(/\/$/, "");
 }

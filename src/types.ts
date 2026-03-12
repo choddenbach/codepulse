@@ -7,6 +7,8 @@ export const ALL_MODULES = [
 ] as const;
 
 export type ModuleName = (typeof ALL_MODULES)[number];
+export type OutputFormat = "terminal" | "json" | "html";
+export type ExitSeverity = "none" | "warning" | "error";
 
 export type FindingSeverity = "critical" | "high" | "medium" | "low" | "info" | "warning" | "error";
 
@@ -38,8 +40,22 @@ export interface AnalysisReport {
 
 export interface ScanOptions {
   targetPath: string;
-  format: "terminal" | "json" | "html";
+  format: OutputFormat;
   modules: ModuleName[];
+  exclude: string[];
+  outputPath?: string;
+  configPath?: string;
+  minScore: number;
+  failOnSeverity: ExitSeverity;
+}
+
+export interface CodePulseConfig {
+  format?: OutputFormat;
+  modules?: ModuleName[];
+  exclude?: string[];
+  outputPath?: string;
+  minScore?: number;
+  failOnSeverity?: ExitSeverity;
 }
 
 export interface LegacyAnalysisReport {
@@ -103,6 +119,19 @@ export function normalizeSeverity(severity: FindingSeverity): "error" | "warning
     default:
       return "info";
   }
+}
+
+export function exceedsFailureThreshold(severity: FindingSeverity, threshold: ExitSeverity): boolean {
+  if (threshold === "none") {
+    return false;
+  }
+
+  const normalized = normalizeSeverity(severity);
+  if (threshold === "warning") {
+    return normalized === "warning" || normalized === "error";
+  }
+
+  return normalized === "error";
 }
 
 export function coarseGrade(score: number): LegacyAnalysisReport["grade"] {

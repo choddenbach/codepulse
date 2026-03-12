@@ -8,12 +8,11 @@ const CHECKS = [
   { pattern: /http:\/\//g, message: "Plain HTTP endpoint detected; prefer HTTPS.", severity: "warning" as const },
 ];
 
-export async function analyzeSecurity(directory: string): Promise<ModuleResult> {
-  const files = await collectProjectFiles(directory);
+export async function analyzeSecurity(directory: string, excludePaths: string[] = []): Promise<ModuleResult> {
+  const files = await collectProjectFiles(directory, { excludePaths });
   const findings: ModuleResult["findings"] = [];
 
-  const SELF_FILE = "src/analyzers/security.ts";
-  for (const file of files.filter((candidate) => (isSourceFile(candidate.relativePath, candidate.extension) || candidate.relativePath === ".env" || candidate.relativePath === "package.json") && candidate.relativePath !== SELF_FILE)) {
+  for (const file of files.filter((candidate) => isSourceFile(candidate.relativePath, candidate.extension) || candidate.relativePath === ".env" || candidate.relativePath === "package.json")) {
     if (file.relativePath === ".env") {
       findings.push({ severity: "error", message: "A .env file is committed to the repository.", file: file.relativePath });
       continue;

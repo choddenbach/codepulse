@@ -3,8 +3,8 @@ import path from "node:path";
 import type { ModuleResult } from "../types.ts";
 import { collectProjectFiles, isSourceFile } from "./shared.ts";
 
-export async function analyzeDocumentation(directory: string): Promise<ModuleResult> {
-  const files = await collectProjectFiles(directory);
+export async function analyzeDocumentation(directory: string, excludePaths: string[] = []): Promise<ModuleResult> {
+  const files = await collectProjectFiles(directory, { excludePaths });
   const findings: ModuleResult["findings"] = [];
   const markdownFiles = files.filter((file) => /(^README|\.md$|\.mdx$)/i.test(path.basename(file.relativePath)));
   const readme = markdownFiles.find((file) => /^README(\.|$)/i.test(path.basename(file.relativePath)));

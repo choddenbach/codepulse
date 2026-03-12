@@ -88,4 +88,22 @@ describe("security analyzer", () => {
     expect(module.findings.some((f) => f.message.toLowerCase().includes("http"))).toBe(true);
     await teardown();
   });
+
+  it("skips excluded paths", async () => {
+    await setup({
+      "src/index.ts": `
+        export const safeValue = 42;
+      `,
+      "fixtures/insecure.ts": `
+        export function run(code: string) {
+          return eval(code);
+        }
+      `,
+    });
+    const report = await analyzeProject(TMP, ["security"], { excludePaths: ["fixtures"] });
+    const module = report.modules[0]!;
+    expect(module.findings).toHaveLength(0);
+    expect(module.score).toBe(100);
+    await teardown();
+  });
 });
